@@ -14,4 +14,4 @@ Usage:
 3. Annotate the element you want to initiate the validation process (usually a button that submits the form) with a data-validate="check" tag:
 	`<asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" data-validate="check" Text="Submit" class="btn"></asp:Button>`
 
-4. Should do the trick!
+4. That should do the trick!
