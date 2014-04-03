@@ -1,5 +1,6 @@
 ﻿;// DotNet namespace
 var DotNet = DotNet || {};
+
 DotNet.Validate = DotNet.Validate || {};
 (function ($, context) {
     // Properties
@@ -14,6 +15,7 @@ DotNet.Validate = DotNet.Validate || {};
         ElementsToValidate: ["input", "select", "textarea", "table"],
         ElementsToFilter: ["input"],
         ValidationKey: "data-validate",
+        ValidationGroupKey: "data-validation-group",
         ValidateEvents: ["keyup", "keydown"],
         ValidateElementRange: function () {
             return $.map(context.Settings.ElementsToValidate, function (single) {
@@ -36,10 +38,14 @@ DotNet.Validate = DotNet.Validate || {};
             return $.map(context.Settings.FilterEvents, function (single) {
                 return single + "." + context.Settings.FilterEventNamespace
             }).join(" ");
+        },
+        ElementsToExclude: ["[disabled]", ":hidden"],
+        ExcludeRange: function () {
+            return context.Settings.ElementsToExclude.join(", ");
         }
     };
     
-    // Default validation methods, probably don't need the element undefined check
+    // Default validation methods
     context.Validation.required = function (elem) {
         return (typeof elem == "undefined") || (elem.value.length > 0 && !elem.disabled);
     };
@@ -49,37 +55,92 @@ DotNet.Validate = DotNet.Validate || {};
     };
 
     context.Validation.length = function (elem) {
-        var min = elem.attributes['data-min-length'].nodeValue;
+        var min = elem.getAttribute('data-min-length');
         if (min == null || min == undefined)
         {
             min = 0;
         }
 
-        var max = elem.attributes['data-max-length'].nodeValue;
+        var max = elem.getAttribute('data-max-length');
         if (max == null || max == undefined) {
             max = 5000;
         }
 
         return RegExp("^.{" + min + "," + max + "}$", "g").test(elem.value);
-    } 
+    }
 
     context.Validation.regex = function (elem) {
-        var rx = elem.attributes['data-expression'].nodeValue;
-        if (rx != undefined && rx != null && rx.length > 0) {
+        var rx = elem.getAttribute('data-expression');
+        if ((typeof rx != "undefined") && rx != null && rx.length > 0) {
             return new RegExp(rx, "g").test(elem.value);
         }
 
         return true;
     }
 
-    var check = function () {
-        $(context.Settings.ValidateElementRange()).trigger('keyup.' + context.Settings.ValidateEventNamespace);
+    context.Validation.selected = function (elem) {
+        var ok = false;
+        var vna = elem.getAttribute('data-value-not-allowed');
+        var ina = elem.getAttribute('data-index-not-allowed');
+        var va = elem.getAttribute('data-value-allowed');
+        var val = elem.value;
+
+        // Check selectedValue
+        if ((typeof vna != "undefined") && vna != null && vna.length > 0) {
+            if (val != vna) {
+                ok = true;
+            }
+        }
+
+        // Check selectedIndex
+        if ((typeof ina != "undefined") && ina != null && ina.length > 0) {
+            var ind = elem[0].selectedIndex;
+            if ((typeof ind != "undefined") && ind != ina) {
+                ok = true;
+            }
+        }
+
+        if ((typeof va != "undefined") && va != null && va.length > 0) {
+            if (val == va) {
+               ok = true;
+            }
+        }
+
+        return ok;
+    }
+
+    var check = function (elem) {
+        var elementsRange = context.Settings.ValidateElementRange();
+        var excludeRange = context.Settings.ExcludeRange();
+
+        $(elementsRange).not(excludeRange).removeClass(context.Settings.InvalidElementClass);
+
+        var validationGroups = elem.getAttribute(context.Settings.ValidationGroupKey);
+        if (validationGroups != undefined && validationGroups != null && validationGroups.length > 0) {
+            var validationGroupRange = '';
+            validationGroups = validationGroups.split(' ');
+            var len = validationGroups.length;
+            for (var i = 0; i < len; i++) {
+                validationGroupRange += $.map(context.Settings.ElementsToValidate, function (single) {
+                    return single + '[' + context.Settings.ValidationGroupKey + '="' + validationGroups[i] + '"]';
+                }).join(', ');
+
+                if (i < (len - 1)) {
+                    validationGroupRange += ", ";
+                }
+            }
+
+            elementsRange = validationGroupRange;
+            $(elementsRange).not(excludeRange).removeClass(context.Settings.InvalidElementClass);
+        }
+
+        $(elementsRange).not(excludeRange).trigger('keyup.' + context.Settings.ValidateEventNamespace);
         return $('.' + context.Settings.InvalidElementClass).length == 0;
     };
 
     // Default filtering methods
     context.Filtering.numeric = function (elem) {
-        var allow = elem.attributes['data-allow'].nodeValue;
+        var allow = elem.getAttribute('data-allow');
         var str = elem.value;
         var re = "[^0-9";
         if (allow != undefined && allow != null && allow.length > 0) {
@@ -118,7 +179,7 @@ DotNet.Validate = DotNet.Validate || {};
 
     // Check handler
     $(document).on('click.' + context.Settings.ValidateEventNamespace, '[' + context.Settings.ValidationKey + '="check"]', function (ev) {
-        var valid = check();
+        var valid = check(this);
         if (!valid) {
             ev.preventDefault();
         }
