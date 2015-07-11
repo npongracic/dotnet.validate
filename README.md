@@ -13,10 +13,14 @@ Usage:
 	`<script src="js/dotnet.validate.js" type="text/javascript"></script>`
 
 2. Annotate the elements you want to validate with a data-validate="validation.function" tag:  
-	`<asp:TextBox ID="txbRequired" data-validate="required" data-filter="numeric" data-allow=",. " Width="8em" MaxLength="8" runat="server"></asp:TextBox>`
+```
+<asp:TextBox ID="txbRequired" data-validate="required" data-filter="numeric" data-allow=",. " Width="8em" MaxLength="8" runat="server"></asp:TextBox>
+```
 
 3. Annotate the element you want to initiate the validation process (usually a button that submits the form) with a data-validate="check" tag:
-	`<asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" data-validate="check" Text="Submit" class="btn"></asp:Button>`
+```
+<asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" data-validate="check" Text="Submit" class="btn"></asp:Button>
+```
 
 4. Profit!
 
