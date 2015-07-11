@@ -23,10 +23,10 @@ Usage:
 PS: To extend the existing, preconfigured validation options include your new extension script after dotnet.validate.js:
 `
 /* Override/extend example */
- DotNet.Validate.Validation.testValidation = function (elem) {
+DotNet.Validate.Validation.testValidation = function (elem) {
  return (typeof elem == "undefined") || (elem.val() == "test");
  };
  `
 
-Usage: data-validate="test-validation"
-It also automatically converts dash separated names to camelCase function names.
+Usage: `data-validate="test-validation"`
+(It also automatically converts dash separated names to camelCase function names)
