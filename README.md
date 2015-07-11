@@ -31,8 +31,8 @@ or
 
 - Profit!
 
-extend with custom validation
-===============
+Extend with a custom validation
+------
 To extend the existing, preconfigured validation options, include your new extension script someplace after dotnet.validate.js:
 ```javascript
 /* Override/extend example */
