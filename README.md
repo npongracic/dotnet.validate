@@ -34,5 +34,8 @@ DotNet.Validate.Validation.testValidation = function (elem) {
 };
  ```
 
-Usage: `data-validate="test-validation"`
+Usage: 
+```html
+<input type="text" data-validate="test-validation" />
+ ```
 (It also automatically converts dash separated names to camelCase function names)
