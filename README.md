@@ -26,7 +26,9 @@ Usage:
 
 - Profit!
 
-PS: To extend the existing, preconfigured validation options, include your new extension script someplace after dotnet.validate.js:
+extend with custom validation
+===============
+To extend the existing, preconfigured validation options, include your new extension script someplace after dotnet.validate.js:
 ```javascript
 /* Override/extend example */
 DotNet.Validate.Validation.testValidation = function (elem) {
