@@ -19,9 +19,14 @@ Usage:
 <asp:TextBox ID="txbRequired" data-validate="required" data-filter="numeric" data-allow=",. " Width="8em" MaxLength="8" runat="server"></asp:TextBox>
 ```
 
-- Annotate the element you want to initiate the validation process (usually a button that submits the form) with a data-validate="check" tag:
+- Annotate the element you want to initiate the validation process (usually a button that submits the form) with a `data-validate="check"` tag 
+ - to limit the validation within a certain group of elements, add the `data-validation-group="group.name"` to the elements you want to validate and the validation trigger (data-validate="check" element):
 ```html
 <asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" data-validate="check" Text="Submit" class="btn"></asp:Button>
+```
+or
+```html
+<asp:Button ID="btnSubmit" runat="server" OnClick="btnSubmit_Click" data-validate="check" data-validation-group="a b c" Text="Submit" class="btn"></asp:Button>
 ```
 
 - Profit!
