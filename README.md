@@ -21,8 +21,7 @@ Usage:
 4. Profit!
 
 PS: To extend the existing, preconfigured validation options include your new extension script after dotnet.validate.js:
-`
-/* Override/extend example */
+`/* Override/extend example */
 DotNet.Validate.Validation.testValidation = function (elem) {
  return (typeof elem == "undefined") || (elem.val() == "test");
  };
