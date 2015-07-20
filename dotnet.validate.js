@@ -149,6 +149,12 @@ DotNet.Validate = DotNet.Validate || {};
   context.Validation.regex = function (elem) {
     var el = $(elem);
     var rx = el.attr('data-expression');
+    var obavezan = el.attr("data-is-required") == "true";
+    
+    if(!obavezan && el.val().length == 0) {
+      return true;
+    }
+    
     if ((typeof rx != "undefined") && rx != null && rx.length > 0) {
       return new RegExp(rx, "g").test(el.val());
     }
