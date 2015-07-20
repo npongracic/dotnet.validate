@@ -707,7 +707,7 @@ DotNet.Validate = DotNet.Validate || {};
   }
 
   //FORMAT//
-  $('input[custom-format], textarea[custom-format], input[data-custom-format], textarea[data-custom-format]').live("blur.customFormat", function (ev) { 
+  $(document).on('blur.customFormat', 'input[custom-format], textarea[custom-format], input[data-custom-format], textarea[data-custom-format]', function (ev) { 
     var elem = $(this);
     var tip = elem.attr('custom-format').toLowerCase();
     if (tip == null || tip == undefined || tip.length == 0) {
